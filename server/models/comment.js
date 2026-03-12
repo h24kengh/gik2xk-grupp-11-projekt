@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define("product", {
+  return sequelize.define("comment", {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -15,10 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       allowNull: false
     },
-
-    imageUrl: {
-      type: DataTypes.STRING(255)
-    }
   }, 
-  { underscored: true });
+  { underscored: true }
+);
 };
