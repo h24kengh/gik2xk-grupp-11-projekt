@@ -8,7 +8,10 @@ module.exports = (sequelize, DataTypes) => {
 
     title: {
       type: DataTypes.STRING(100),
-      allowNull: false
+      allowNull: false,
+      validate: {
+        len: [2, 100]
+      }
     },
 
     body: {
