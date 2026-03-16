@@ -37,6 +37,27 @@ Object.keys(db).forEach(modelName => {
   }
 });
 
+db.post.belongsTo(db.user);
+db.user.hasMany(db.post, {
+  allowNull: false, 
+  onDelete: 'CASCADE'
+});
+
+db.comment.belongsTo(db.post);
+db.post.hasMany(db.comment, {
+  allowNull: false,
+  onDelete: 'CASCADE'
+});
+
+db.comment.belongsTo(db.user);
+db.user.hasMany(db.comment, {
+  allowNull: false,
+  onDelete: 'CASCADE'
+});
+
+db.post.belongsToMany(db.tag, { through: db.postTag });
+db.tag.belongsToMany(db.post, { through: db.postTag });
+
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
