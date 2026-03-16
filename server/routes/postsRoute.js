@@ -43,28 +43,22 @@ router.post('/', (req, res) => {
    });
 });
 router.put('/', (req, res) => {
-     const user = req.body;
-    const invalidData = validate(user, constraints);
-    const id = user.id;
-    if(invalidData || !id) {
-        res.status(400).json(invalidData || 'Id är obligatoriskt.');
-    } else {
- db.users
-  .update(user, {
-    where: { id: user.id }
-  })
-    .then((result) => { 
-        res.send(result);
-    });
-    }
+     const post = req.body;
+     const id = post.id;
+
+     postService.update(post, id).then ((result) => {
+     res.status(result.status).json(result.data);
+   });
 });
 router.delete('/', (req, res) => {
-  db.users
-  .destroy({
-    where: { id: req.body.id }
-  }).then((result) => {
-    res.json(`produkten raderades ${result}`);
-  });
+
+  const id = req.body.id
+
+    postService.destroy(id).then ((result) => {
+    res.status(result.status).json(result.data);
+    });
+
+
 });
 
 
