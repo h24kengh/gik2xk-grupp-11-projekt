@@ -2,6 +2,7 @@ const router = require("express").Router();
 const db = require("../models");
 const validate = require('validate.js');
 const user = require("../models/user");
+const postService = require("../services/postService")
 
 const constraints = { 
     email: { 
@@ -29,6 +30,15 @@ imageurl: {
     }
 }
 };
+
+router.get("/:id/posts", (req, res) => {
+   const id = req.params.id;
+  
+      postService.getByAuthor(id).then ((result) => {
+      res.status(result.status).json(result.data);
+     });
+
+});
 
 router.get('/', (req, res) => {
     db.users.findAll().then((result) => {
