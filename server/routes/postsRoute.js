@@ -37,8 +37,10 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-    const user = req.body;
-    
+    const post = req.body;
+      postService.create(post).then ((result) => {
+      res.status(result.status).json(result.data);
+   });
 });
 router.put('/', (req, res) => {
      const user = req.body;
