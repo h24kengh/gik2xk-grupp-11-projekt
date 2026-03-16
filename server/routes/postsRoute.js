@@ -1,9 +1,8 @@
 const router = require("express").Router();
-const db = require("../models");
 
-const user = require("../models/user");
 const postService = require ('../services/postServices');
-const constraints = { 
+/* const constraints = { 
+
     email: { 
         length: {
         minimun: 4,
@@ -29,6 +28,24 @@ imageurl: {
     }
 }
 };
+ */
+            
+                
+router.post("/:id/addComment", (req, res) => {
+  const comment = req.body;
+  const id = req.params.id;
+      postService.addComment(id, comment).then ((result) => {
+      res.status(result.status).json(result.data);
+   });
+});
+
+router.get("/:id", (reg, res) => {
+    const id = req.params.id;
+
+    postService.getById(id).then ((result) => {
+    res.status(result.status).json(result.data);
+   });
+});
 
 router.get('/', (req, res) => {
    postService.getAll().then ((result) => {
