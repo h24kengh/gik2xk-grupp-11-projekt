@@ -49,7 +49,7 @@ async function getAll() {
 async function create() {
     const invalidData = validate(post, constraints);
     if (invalidData) {
-       return createResponseError(422, invaldidData);
+       return createResponseError(422, invalidData);
     } else {
         try {
            const newPost =  await db.post.create(post);
