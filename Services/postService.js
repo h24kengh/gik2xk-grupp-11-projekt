@@ -46,7 +46,7 @@ async function getAll() {
     }
  
 }
-async function create() {
+async function create(post) {
     const invalidData = validate(post, constraints);
     if (invalidData) {
        return createResponseError(422, invalidData);
