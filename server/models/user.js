@@ -1,4 +1,4 @@
-const { is } = require("sequelize/types/lib/operators");
+const { Op } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define("user", {
