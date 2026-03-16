@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const db = require("../models");
-const validate = require('validate.js');
+const validate = require('validate.js');    
 const user = require("../models/user");
 
 const constraints = { 
