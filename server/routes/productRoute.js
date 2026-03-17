@@ -1,5 +1,6 @@
 const router = require("express").Router();
 
+const product = require("../models/product");
 const postService = require ('../services/productService');
 /* const constraints = { 
 
@@ -31,10 +32,10 @@ imageurl: {
  */
             
                 
-router.post("/:id/addComment", (req, res) => {
+router.post("/:id/comments", (req, res) => {
   const comment = req.body;
   const id = req.params.id;
-      postService.addComment(id, comment).then ((result) => {
+      productService.addComment(id, comment).then ((result) => {
       res.status(result.status).json(result.data);
    });
 });
@@ -54,8 +55,8 @@ router.get('/', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-    const post = req.body;
-      postService.create(post).then ((result) => {
+    const product = req.body;
+      productService.create(product).then ((result) => {
       res.status(result.status).json(result.data);
    });
 });

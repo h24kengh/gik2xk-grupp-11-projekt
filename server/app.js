@@ -8,7 +8,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use('/posts', require('./routes/postsRoute'));
+app.use('/product', require('./routes/productRoute'));
 app.use('/users', require('./routes/usersRoute'));
 app.use('/tag', require('./routes/tagsRoute'));
 
