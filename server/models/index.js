@@ -37,8 +37,12 @@ Object.keys(db).forEach(modelName => {
   }
 });
 
-db.post.belongsTo(db.user, {foreignKey: {allowNull: false} });
+db.post.belongsTo(db.user, {
+  foreignKey: 'user_id',
+  allowNull: false
+ });
 db.user.hasMany(db.post, {
+  foreignKey: 'user_id',
   allowNull: false, 
   onDelete: 'CASCADE'
 });
@@ -62,3 +66,4 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 module.exports = db;
+

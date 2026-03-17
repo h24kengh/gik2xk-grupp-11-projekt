@@ -3,10 +3,10 @@ const {
     createResponseSuccess,
     createResponseError,
     createResponseMessage
-} = require('../Helpers/responsehelper');
+} = require('../helpers/responsehelper');
 const validate = require('validate.js');    
-const { post } = require('../server/app');
-const user = require('../server/models/user');
+const  post  = require('../models/post');
+const user = require('../models/user');
 
 const constraints = { 
     email: { 
