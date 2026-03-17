@@ -1,6 +1,6 @@
 const router = require("express").Router();
 
-const postService = require ('../services/postService');
+const postService = require ('../services/productService');
 /* const constraints = { 
 
     email: { 
@@ -39,16 +39,16 @@ router.post("/:id/addComment", (req, res) => {
    });
 });
 
-router.get("/:id", (reg, res) => {
+router.get("/:id", async (reg, res) => {
     const id = req.params.id;
 
-    postService.getById(id).then ((result) => {
+    const result = await productService.getById(id).then ((result) => {
     res.status(result.status).json(result.data);
    });
 });
 
 router.get('/', (req, res) => {
-   postService.getAll().then ((result) => {
+   productService.getAll().then ((result) => {
     res.status(result.status).json(result.data);
    });
 });

@@ -37,18 +37,18 @@ Object.keys(db).forEach(modelName => {
   }
 });
 
-db.post.belongsTo(db.user, {
+db.product.belongsTo(db.user, {
   foreignKey: 'user_id',
   allowNull: false
  });
-db.user.hasMany(db.post, {
+db.user.hasMany(db.product, {
   foreignKey: 'user_id',
   allowNull: false, 
   onDelete: 'CASCADE'
 });
 
-db.comment.belongsTo(db.post);
-db.post.hasMany(db.comment, {
+db.comment.belongsTo(db.product);
+db.product.hasMany(db.comment, {
   allowNull: false,
   onDelete: 'CASCADE'
 });
@@ -59,8 +59,8 @@ db.user.hasMany(db.comment, {
   onDelete: 'CASCADE'
 });
 
-db.post.belongsToMany(db.tag, { through: db.postTag });
-db.tag.belongsToMany(db.post, { through: db.postTag });
+db.product.belongsToMany(db.tag, { through: db.productTags });
+db.tag.belongsToMany(db.product, { through: db.productTags });
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

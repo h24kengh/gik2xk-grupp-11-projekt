@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const db = require("../models");
-const postService = require("../services/postService")
+const postService = require("../services/productService")
 
 router.get("/:id/posts", (req, res) => {
    const id = req.params.id;

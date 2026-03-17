@@ -5,7 +5,7 @@ const {
     createResponseMessage
 } = require('../helpers/responsehelper');
 const validate = require('validate.js');    
-const  post  = require('../models/post');
+const  post  = require('../models/product');
 const user = require('../models/user');
 
 const constraints = { 
@@ -60,42 +60,50 @@ async function getByAuthor(userId) {
 async function getById(id) {
     try {
 
-        const post =  await db.post.findOne({
+        const product =  await db.product.findOne({
             where: { id }, 
             include: 
-            [db.user, 
+            [db.comment, 
             db.tag,
             {
             model: db.comment, 
             include: [db.user] 
             }]
         });
+
         /* Om allt blev bra, returna post */
-        return createResponseSuccess(_formatPost(post));
+        if (!product) return createResponseError(404, "Produkten hittades inte.")
+        return createResponseSuccess(product);
     } catch (error) {
         return createResponseError(error.status, error.message);
     }
 }
 
-async function getAll() {
+async function getAll(searchTerm) {
     try {
+        const whereClause = searchTerm ? {
+            title: {[Op.like]: '%${searchTerm}%' }
+        }: {};
 
-        const allPosts =  await db.post.findAll({include: [db.user, db.tag]});
+        const allProducts =  await db.product.findAll({
+            where: whereClause,
+            include: [db.tag]});
         /* Om allt blev bra, returna allPosts */
-        return createResponseSuccess(allPosts.map(post => _formatPost(post)));
+        return createResponseSuccess(allProducts.map(post => _formatPost(post)));
     } catch (error) {
         return createResponseError(error.status, error.message);
     }
  
 }
 
-async function addComment(id, comment) {
+async function addComment(productId, comment) {
    
     if (!id) {
        return createResponseError(422, "ID är obligatoriskt");
     }  
     try {
-        comment.postId = id;
+        const product = await db.product.findOne(productId)
+        comment.productId = id;
         const newComment =  await db.comment.create(comment);
         return createResponseSuccess(newComment);
     } catch (error) {
@@ -104,22 +112,22 @@ async function addComment(id, comment) {
   
 }
 
-async function create(post) {
+async function create(productData) {
     const invalidData = validate(post, constraints);
     if (invalidData) {
        return createResponseError(422, invalidData);
     }  try {
-           const newPost =  await db.post.create(post);
+           const newProduct =  await db.product.create(productData);
             //post tags är en  array av namn
            //lägga till eventuella taggar
            await _addTagToPost(newPost, post.tags);
-           return createResponseSuccess(newPost);
+           return createResponseSuccess(newProduct);
         } catch (error) {
         return createResponseError(error.status, error.message);
     }
   
 }
-async function update(post, id) {
+async function update(productId, qtyChange) {
         const invalidData = validate(post, constraints);
         if(!id) {
             return createResponseError(422, "ID är obligatoriskt");
@@ -128,15 +136,16 @@ async function update(post, id) {
            return createResponseError(422, invalidData);
         } 
         try {
-            const existingPost = await db.post.findOne({where: {id}});
-             if(!existingPost) {
+            const product = await db.product.findOne({where: {id}});
+             if(!product) {
             return createResponseError(404, "Hittade inget inlägg att uppdatera.");
             }
             await _addTagToPost(existingPost, post.tags);
-            await db.post.update(post, {
-                where: { id }
+            const newQty = Math.max(0,product.inventory_qty + quantityChange);
+            await db.product.update({inventory_qty: newQty
             });
-            return createResponseMessage(200, "Inlägget uppdaterades.");
+
+            return createResponseMessage(200, "Lagersaldo uppdaterat till ${newQty}");
             } catch(error) {
             return createResponseError(error.status, error.message);
             }
@@ -148,10 +157,10 @@ async function destroy(id) {
         return createResponseError(422, "ID är obligatoriskt!");
     }
     try {
-    await db.post.destroy({
+    await db.product.destroy({
         where: { id }
       });
-      return createResponseMessage(200, "Inlägget raderades.");
+      return createResponseMessage(200, "Produkt raderades.");
     } catch(error) {
             return createResponseError(error.status, error.message);
     }

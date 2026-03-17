@@ -1,5 +1,7 @@
+const { TEXT } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define("post", {
+  return sequelize.define("product", {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -14,9 +16,21 @@ module.exports = (sequelize, DataTypes) => {
       }
     },
 
-    body: {
+    description: {
       type: DataTypes.TEXT,
       allowNull: false
+    },
+
+    price: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+      defaultValue: 0
+    },
+
+    inventory_qty: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0
     },
 
     imageUrl: {
