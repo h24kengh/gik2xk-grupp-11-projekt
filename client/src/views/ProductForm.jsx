@@ -55,6 +55,7 @@ function ProductForm() {
 
   function onDelete() {
     remove(id).then(response => console.log(response));
+    navigate('/', (-1) );
   }
 
   const validateForm = () => {
@@ -211,7 +212,7 @@ function ProductForm() {
             Avbryt
           </Button>
 
-          <Button onClick={onDelete} variant="contained" color="error">
+          <Button onClick={onDelete} variant="contained" color="error" >
             Ta bort
           </Button>
 
