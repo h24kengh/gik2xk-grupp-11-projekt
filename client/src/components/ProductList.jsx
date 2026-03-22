@@ -9,15 +9,32 @@ import {
 } from '@mui/material';
 import { useCart } from '../CartContext.jsx';
 import { Link } from 'react-router-dom';
+import { getAll } from '../services/ProductService';
+import { useEffect, useState } from 'react';
 
-function ProductList() {
+
+function ProductList({pathname}) {
+
+const [products, setProducts] = useState([]);
+
+useEffect(() => {
+  getAll()
+    .then((data) => {
+      // Kontrollera att data är en array innan du sätter den
+      if (Array.isArray(data)) {
+        setProducts(data);
+      } else {
+        console.error('Fick inte en array från getAll:', data);
+        setProducts([]); // Sätt till tom array om datan inte är en array
+      }
+    })
+    .catch((error) => {
+      console.error('Kunde inte hämta produkter:', error);
+      setProducts([]); // Sätt till tom array vid fel
+    });
+}, []);
+
   const { addToCart } = useCart();
-
-  const products = [
-    { id: 1, name: 'Första produkten', price: 10.99, description: 'Detta är den första produkten.', stock: 5 },
-    { id: 2, name: 'Andra produkten', price: 15.99, description: 'Detta är den andra produkten.', stock: 3 },
-    { id: 3, name: 'Tredje produkten', price: 20.99, description: 'Detta är den tredje produkten.', stock: 7 },
-  ];
 
   return (
     <Box>
@@ -77,7 +94,7 @@ function ProductList() {
                 <Button
                   variant="contained"
                   fullWidth
-                  onClick={() => addToCart(product)}
+                  onClick={() => addToCart(product.id, 1, 1)}
                 >
                   Lägg i kundkorg
                 </Button>
@@ -90,6 +107,16 @@ function ProductList() {
                 >
                   Visa produkt
                 </Button>
+                  <Button
+                    variant="contained"
+                    fullWidth
+                    component={Link}
+                    to={`/product/${product.id}/edit`}
+                    sx={{ mt: 1 }}
+                    color="warning"
+                  >
+                    Ändra produkt
+                  </Button>
               </CardActions>
             </Card>
           </Grid>

@@ -1,9 +1,14 @@
 import UserItemSmall from './UserItemSmall';
+import { useEffect, useState } from 'react'
+import { getAll } from '../services/UserService';
 
 function UserList() {
-  const users = [
-    // your users here
-  ];
+
+const [users, setUsers] = useState ([]);
+
+useEffect(() => {
+  getAll().then(users => setUsers(users) );
+}, []);
 
   return (
     <ul>

@@ -35,6 +35,33 @@ imageurl: {
 }
 };
 
+const products = [
+    {
+      id: 1,
+      name: 'Första produkten',
+      price: 10.99,
+      description: 'Detta är den första produkten. Den passar perfekt för dig som vill ha en enkel och prisvärd produkt.',
+      stock: 5,
+      image: 'https://via.placeholder.com/600x400?text=Produkt+1',
+    },
+    {
+      id: 2,
+      name: 'Andra produkten',
+      price: 15.99,
+      description: 'Detta är den andra produkten. Ett bra val för dig som vill ha något lite bättre och mer användbart.',
+      stock: 3,
+      image: 'https://via.placeholder.com/600x400?text=Produkt+2',
+    },
+    {
+      id: 3,
+      name: 'Tredje produkten',
+      price: 20.99,
+      description: 'Detta är den tredje produkten. Ett premiumalternativ för dig som vill ha högre kvalitet.',
+      stock: 7,
+      image: 'https://via.placeholder.com/600x400?text=Produkt+3',
+    },
+  ];
+
 async function getByTag(tagId) {
     try {
         const tag = await db.tag.findOne({ where: {id: tagId } });
@@ -71,7 +98,7 @@ async function getById(id) {
             }]
         });
 
-        /* Om allt blev bra, returna post */
+        /* Om allt blev bra, returnera post */
         if (!product) return createResponseError(404, "Produkten hittades inte.")
         return createResponseSuccess(product);
     } catch (error) {

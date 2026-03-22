@@ -1,47 +1,68 @@
-import { Box, Typography, Button, Card, CardContent } from '@mui/material';
-import { useParams } from 'react-router-dom';
+import { Box, Typography, Button, Card, CardContent, CircularProgress } from '@mui/material';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useCart } from '../CartContext.jsx';
+import { getOne } from '../services/ProductService';
+import { useEffect, useState } from 'react';
 
 function ProductDetail() {
   const { id } = useParams();
   const { addToCart } = useCart();
+  const navigate = useNavigate();
 
-  const products = [
-    {
-      id: 1,
-      name: 'Första produkten',
-      price: 10.99,
-      description: 'Detta är den första produkten. Den passar perfekt för dig som vill ha en enkel och prisvärd produkt.',
-      stock: 5,
-      image: 'https://via.placeholder.com/600x400?text=Produkt+1',
-    },
-    {
-      id: 2,
-      name: 'Andra produkten',
-      price: 15.99,
-      description: 'Detta är den andra produkten. Ett bra val för dig som vill ha något lite bättre och mer användbart.',
-      stock: 3,
-      image: 'https://via.placeholder.com/600x400?text=Produkt+2',
-    },
-    {
-      id: 3,
-      name: 'Tredje produkten',
-      price: 20.99,
-      description: 'Detta är den tredje produkten. Ett premiumalternativ för dig som vill ha högre kvalitet.',
-      stock: 7,
-      image: 'https://via.placeholder.com/600x400?text=Produkt+3',
-    },
-  ];
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const product = products.find((p) => p.id === Number(id));
+  useEffect(() => {
+    if (!id) {
+      setError('Inget produkt-ID angivet');
+      setLoading(false);
+      return;
+    }
 
-  if (!product) {
+    setLoading(true);
+    
+    getOne(id)
+      .then((data) => {
+        if (data) {
+          setProduct(data);
+          setError(null);
+        } else {
+          setError('Produkten hittades inte');
+        }
+      })
+      .catch((err) => {
+        console.error('Fel vid hämtning:', err);
+        setError('Kunde inte hämta produkten');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [id]);
+
+  if (loading) {
     return (
-      <Box sx={{ p: 3 }}>
-        <Typography variant="h4">Produkten hittades inte.</Typography>
-        <Typography variant="body1" sx={{ mt: 2 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error || !product) {
+    return (
+      <Box sx={{ p: 3, textAlign: 'center' }}>
+        <Typography variant="h4" color="error" gutterBottom>
+          {error || 'Produkten hittades inte'}
+        </Typography>
+        <Typography variant="body1" sx={{ mt: 2, mb: 3 }}>
           Produkt-id från URL: {id}
         </Typography>
+        <Button 
+          variant="contained" 
+          onClick={() => navigate('/')}
+        >
+          Tillbaka till produkter
+        </Button>
       </Box>
     );
   }
@@ -57,12 +78,13 @@ function ProductDetail() {
         >
           <Box
             component="img"
-            src={product.image}
+            src={product.image || 'https://via.placeholder.com/600x400?text=Ingen+bild'}
             alt={product.name}
             sx={{
               width: { xs: '100%', md: '50%' },
               height: { xs: 260, sm: 350, md: 'auto' },
               objectFit: 'cover',
+              backgroundColor: '#f5f5f5',
             }}
           />
 
@@ -76,7 +98,7 @@ function ProductDetail() {
               {product.name}
             </Typography>
 
-            <Typography variant="h5" sx={{ mb: 2 }}>
+            <Typography variant="h5" sx={{ mb: 2, color: 'primary.main' }}>
               {product.price} kr
             </Typography>
 
@@ -85,20 +107,27 @@ function ProductDetail() {
             </Typography>
 
             <Typography variant="body1" sx={{ mb: 2 }}>
-              I lager: {product.stock}
-            </Typography>
-
-            <Typography variant="body2" sx={{ mb: 3 }}>
-              Produkt-id från URL: {id}
+              I lager: {product.stock} st
             </Typography>
 
             <Button
               variant="contained"
               size="large"
               fullWidth
-              onClick={() => addToCart(product)}
+              onClick={() => addToCart(product.id, 1, product.price)}
+              sx={{ mt: 2 }}
             >
               Lägg i kundkorg
+            </Button>
+
+            <Button
+              variant="outlined"
+              size="large"
+              fullWidth
+              onClick={() => navigate('/')}
+              sx={{ mt: 2 }}
+            >
+              Tillbaka till produkter
             </Button>
           </CardContent>
         </Box>

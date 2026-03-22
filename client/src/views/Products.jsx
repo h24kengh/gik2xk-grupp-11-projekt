@@ -1,7 +1,12 @@
 import { Typography, Box } from '@mui/material';
 import ProductList from '../components/ProductList';
+import { useParams, useLocation } from 'react-router-dom';
 
 function Products() {
+const location = useLocation();
+
+
+
   return (
     <Box
       sx={{
