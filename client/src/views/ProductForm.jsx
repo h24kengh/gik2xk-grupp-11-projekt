@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { Box, Typography, TextField, Button, Stack, Alert, CircularProgress } from '@mui/material';
 import { useState, useEffect } from 'react';
-import { getOne, create, update } from '../services/ProductService';
+import { getOne, create, update, remove } from '../services/ProductService';
 
 function ProductForm() {
   const { id } = useParams();
@@ -52,6 +52,10 @@ function ProductForm() {
     // Rensa fel när användaren skriver
     if (error) setError('');
   };
+
+  function onDelete() {
+    remove(id).then(response => console.log(response));
+  }
 
   const validateForm = () => {
     if (!formData.name.trim()) {
@@ -206,6 +210,15 @@ function ProductForm() {
           >
             Avbryt
           </Button>
+
+          <Button onClick={onDelete} variant="contained" color="error">
+            Ta bort
+          </Button>
+
+         {/*  <Button onClick={onSave} variant="contained" color= "success">
+            Spara
+          </Button> */}
+
         </Stack>
       </form>
     </Box>
