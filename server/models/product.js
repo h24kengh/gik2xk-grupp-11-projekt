@@ -1,12 +1,12 @@
 const { TEXT } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
-  return sequelize.define("product", {
+  const Product = sequelize.define("product", {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true
-    },   // ← KOMMA HÄR
+    },
 
     title: {
       type: DataTypes.STRING(100),
@@ -37,5 +37,16 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING(255)
     }
   }, 
-  { underscored: true });
+  { underscored: true,
+    tableName: 'products'
+   });
+
+// Product.associate = (models) => {
+//   Product.hasMany(models.Rating, {
+//     foreignKey: 'product_id',
+//     as: 'ratings'
+//   });
+// };
+
+return Product;
 };

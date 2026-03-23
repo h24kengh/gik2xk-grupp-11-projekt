@@ -19,4 +19,6 @@ app.use('/product', require('./routes/productRoute'));
 app.use('/users', require('./routes/usersRoute'));
 app.use('/tag', require('./routes/tagsRoute'));
 
+app.use('/api', require('./routes/ratingRoute'));
+
 module.exports = app;
