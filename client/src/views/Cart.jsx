@@ -31,8 +31,8 @@ function Cart() {
       ) : (
         <>
           <Stack spacing={2}>
-            {cartItems.map((item) => (
-              <Card key={item.id}>
+            {cartItems.map((item, index) => (
+              <Card key={item.id || index}>
                 <CardContent>
                   <Typography variant="h6" sx={{ mb: 1 }}>
                     {item.name}
@@ -41,7 +41,7 @@ function Cart() {
                   <Typography>Pris: {item.price} kr</Typography>
                   <Typography>Antal: {item.quantity}</Typography>
                   <Typography sx={{ mb: 2 }}>
-                    Summa: {(item.price * item.quantity).toFixed(2)} kr
+                    Summa: {(Number(item.price) * Number(item.quantity)).toFixed(2)} kr
                   </Typography>
 
                   <Stack

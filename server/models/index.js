@@ -47,20 +47,20 @@ db.user.hasMany(db.product, {
   onDelete: 'CASCADE'
 });
 
-db.comment.belongsTo(db.product);
+/* db.comment.belongsTo(db.product);
 db.product.hasMany(db.comment, {
   allowNull: false,
   onDelete: 'CASCADE'
-});
+}); */
 
-db.comment.belongsTo(db.user);
+/* db.comment.belongsTo(db.user);
 db.user.hasMany(db.comment, {
   allowNull: false,
   onDelete: 'CASCADE'
 });
-
-db.product.belongsToMany(db.tag, { through: db.productTags });
-db.tag.belongsToMany(db.product, { through: db.productTags });
+ */
+/* db.product.belongsToMany(db.tag, { through: db.productTags });
+db.tag.belongsToMany(db.product, { through: db.productTags }); */
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;

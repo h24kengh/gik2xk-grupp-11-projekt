@@ -2,10 +2,12 @@ import { createContext, useContext, useState } from 'react';
 
 const CartContext = createContext();
 
+
 export function CartProvider({ children }) {
   const [cartItems, setCartItems] = useState([]);
 
   const addToCart = (product) => {
+
     setCartItems((prevItems) => {
       const existingProduct = prevItems.find((item) => item.id === product.id);
 
@@ -36,6 +38,7 @@ export function CartProvider({ children }) {
       )
     );
   };
+  
 
   const decreaseQuantity = (productId) => {
     setCartItems((prevItems) =>
@@ -53,10 +56,11 @@ export function CartProvider({ children }) {
     setCartItems([]);
   };
 
-  const totalPrice = cartItems.reduce(
-    (total, item) => total + item.price * item.quantity,
-    0
-  );
+ const totalPrice = cartItems.reduce((total, item) => {
+  const price = Number(item.price) || 0; // Tvinga till siffra, annars 0
+  const qty = Number(item.quantity) || 0;
+  return total + (price * qty);
+}, 0);
 
   return (
     <CartContext.Provider

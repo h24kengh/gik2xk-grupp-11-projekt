@@ -96,7 +96,7 @@ useEffect(() => {
                   color="success"
                   variant="contained"
                   fullWidth
-                  onClick={() => addToCart(product.id, 1, 1)}
+                  onClick={() => addToCart(product, 1, 1)}
                 >
                   Lägg i kundkorg
                 </Button>
