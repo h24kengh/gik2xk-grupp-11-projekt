@@ -1,3 +1,4 @@
+import { imageListClasses } from '@mui/material';
 import axios from './api';
 
 // Mock-data för utveckling när backend inte är tillgänglig
@@ -7,13 +8,15 @@ const mockProducts = [
     name: 'Premium Laptop', 
     price: 12999, 
     description: 'Högpresterande laptop med 16GB RAM och 512GB SSD', 
-    stock: 8 
+    imageUrl: "https://images.unsplash.com/photos/macbook-pro-RSCirJ70NDM",
+    stock: 8, 
   },
   { 
     id: 2, 
     name: 'Trådlös Mus', 
     price: 399, 
     description: 'Ergonomisk trådlös mus med lång batteritid', 
+    imageUrl: "https://images.unsplash.com/photos/a-computer-mouse-sitting-on-top-of-an-orange-surface-JVUqiEc2Svc",
     stock: 15 
   },
   { 
@@ -21,6 +24,7 @@ const mockProducts = [
     name: '27" 4K Skärm', 
     price: 3499, 
     description: '4K UHD skärm med IPS-panel', 
+    imageUrl: "https://images.unsplash.com/photos/black-flat-screen-tv-turned-off-lVuV7AcfOrY",
     stock: 5 
   }
 ];
@@ -28,7 +32,7 @@ const mockProducts = [
 export async function getAll(endpoint = '/products') {
   try {
     const response = await axios.get(endpoint);
-    
+   
     if (response.status === 200 && Array.isArray(response.data)) {
       console.log(' Hämtade produkter från API');
       return response.data;
@@ -42,7 +46,9 @@ export async function getAll(endpoint = '/products') {
     e?.response ? console.log('Fel:', e.response.data) : console.log('Fel:', e.message);
     return mockProducts; //  Här returneras mock-data vid fel
   }
+  
 }
+
 
 export async function getOne(id) {
   try {

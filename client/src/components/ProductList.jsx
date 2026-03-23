@@ -3,6 +3,7 @@ import {
   CardContent,
   CardActions,
   Typography,
+  CardMedia,
   Button,
   Grid,
   Box,
@@ -12,7 +13,7 @@ import { Link } from 'react-router-dom';
 import { getAll } from '../services/ProductService';
 import { useEffect, useState } from 'react';
 import EditIcon from '@mui/icons-material/Edit';
-
+import placeholderImage from '../assets/hero.png';
 
 function ProductList({pathname}) {
 
@@ -23,6 +24,7 @@ useEffect(() => {
     .then((data) => {
       // Kontrollera att data är en array innan du sätter den
       if (Array.isArray(data)) {
+        
         setProducts(data);
       } else {
         console.error('Fick inte en array från getAll:', data);
@@ -69,6 +71,7 @@ useEffect(() => {
                 >
                   {product.price} kr
                 </Typography>
+
 
                 <Typography
                   variant="body2"
