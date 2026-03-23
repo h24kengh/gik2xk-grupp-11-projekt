@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { useCart } from '../CartContext.jsx';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import DeleteIcon from '@mui/icons-material/Delete'
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 function Cart() {
   const {
     cartItems,
@@ -27,7 +28,22 @@ function Cart() {
       </Typography>
 
       {cartItems.length === 0 ? (
+        <>
         <Typography>Din kundkorg är tom.</Typography>
+
+        <Button
+  startIcon={<ShoppingCartIcon />}
+  variant="contained"
+  color="success"
+  component={Link}
+  to="/"
+  size="large"
+  sx={{ mt: 2 }}
+>
+  Börja handla
+</Button>
+</>
+        
       ) : (
         <>
           <Stack spacing={2}>
