@@ -15,6 +15,7 @@ function ProductForm() {
     price: '',
     description: '',
     stock: '',
+    image: '',
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -31,6 +32,7 @@ function ProductForm() {
               price: product.price || '',
               description: product.description || '',
               stock: product.stock || '',
+              image: product.image || '',
             });
           } else {
             setError('Produkten hittades inte');
@@ -96,6 +98,7 @@ function ProductForm() {
         price: parseFloat(formData.price),
         description: formData.description,
         stock: parseInt(formData.stock),
+        image: formData.image,
       };
 
       if (isEditMode) {
@@ -124,6 +127,17 @@ function ProductForm() {
       setLoading(false);
     }
   };
+
+  const handleFileChange = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setFormData({ ...formData, image: reader.result }); // Sparar bilden som en Base64-sträng
+    };
+    reader.readAsDataURL(file);
+  }
+};
 
   // Visa laddningsindikator medan vi hämtar produkt (redigeringsläge)
   if (fetchLoading) {
@@ -193,6 +207,17 @@ function ProductForm() {
             disabled={loading}
             inputProps={{ min: 0 }}
           />
+
+          <TextField
+            label="Bild-URL (Länk till bild)"
+            name="image"
+            value={formData.image}
+            onChange={handleChange}
+            fullWidth
+            placeholder="https://exempel.se/bild.jpg"
+            disabled={loading}
+          />
+
           <Box display="flex" gap={2} mt={2}>
           <Button 
             startIcon={<SaveIcon/>}
@@ -225,7 +250,26 @@ function ProductForm() {
             >
             Ta bort
           </Button>
+
           </Box>
+             <Button 
+          variant="outlined" 
+          component="label"
+          size='large'
+          sx={{ 
+           py: 1.5, // Justerar höjden så den matchar TextField/Button exakt
+           textTransform: 'none', // Valfritt: hindrar knappen från att bara ha stora bokstäver
+           borderColor: 'rgba(0, 0, 0, 0.23)' // Matchar färgen på TextField-kanter
+          }}>
+          Bifoga bild(PNG/JPG)
+          {<input type="file" hidden accept="image/*" onChange={handleFileChange} />}
+          </Button>
+          
+          {formData.image && (
+          <Box sx={{ textAlign: 'center', mt: 1 }}>
+          <img src={formData.image} alt="Preview" style={{ height: 100, borderRadius: 8 }} />
+          </Box>
+          )}
 
         </Stack>
       </form>

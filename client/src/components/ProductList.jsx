@@ -37,7 +37,7 @@ function ProductList({ pathname }) {
           // Berika produkterna med lokala bilder innan vi sätter state
           const enrichedProducts = data.map((product) => ({
             ...product,
-            imageUrl: imageMap[product.id] || placeholderImage,
+            imageUrl: product.image ||imageMap[product.id] || placeholderImage,
           }));
           setProducts(enrichedProducts);
         } else {
@@ -49,7 +49,7 @@ function ProductList({ pathname }) {
         console.error('Kunde inte hämta produkter:', error);
         setProducts([]);
       });
-  }, []); // Endast en useEffect nu!
+  }, []); 
 
   const { addToCart } = useCart();
 

@@ -25,33 +25,39 @@ function ProductDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    if (!id) {
-      setError('Inget produkt-ID angivet');
-      setLoading(false);
-      return;
-    }
+ useEffect(() => {
+  if (!id) {
+    setError('Inget produkt-ID angivet');
+    setLoading(false);
+    return;
+  }
 
-    setLoading(true);
-    
-    getOne(id)
-      .then((data) => {
-        if (data) {
+  setLoading(true);
+
+  getOne(id)
+    .then((data) => {
+      if (data) {
+        // 1. Kolla om vi behöver hämta bild från imageMap (för Laptop, Mus, Skärm)
+        if (!data.image) {
           data.image = imageMap[data.id];
-          setProduct(data);
-          setError(null);
-        } else {
-          setError('Produkten hittades inte');
         }
-      })
-      .catch((err) => {
-        console.error('Fel vid hämtning:', err);
-        setError('Kunde inte hämta produkten');
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [id]);
+
+        // 2. Spara produkten i state (detta ska ske för ALLA produkter som hittas)
+        setProduct(data);
+        setError(null);
+      } else {
+        // Om data är null/undefined från getOne
+        setError('Produkten hittades inte');
+      }
+    })
+    .catch((err) => {
+      console.error('Fel vid hämtning:', err);
+      setError('Kunde inte hämta produkten');
+    })
+    .finally(() => {
+      setLoading(false);
+    });
+}, [id]);
 
   if (loading) {
     return (

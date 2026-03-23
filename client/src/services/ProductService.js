@@ -55,12 +55,16 @@ export async function getOne(id) {
     }
     return null;
   } catch(e) {
-    // Försök hitta produkten i mock-data
-    const product = mockProducts.find(p => p.id === parseInt(id));
+    // VIKTIG ÄNDRING HÄR:
+    // Leta i 'products' (den lista som uppdateras), inte den fasta 'mockProducts'
+    // Vi använder == för att strunta i om id är "4" (sträng) eller 4 (nummer)
+    const product = mockProducts.find(p => p.id == id); 
+    
     if (product) {
-      console.log(`Använder mock-data för produkt ${id}`);
+      console.log(`Hittade produkt ${id} i lokal data`);
       return product;
     }
+    
     e?.response ? console.log(e.response.data) : console.log(e);
     return null;
   }
@@ -75,8 +79,12 @@ export async function create(product) {
     return null;
   } catch (e) {
     console.log('Simulerar skapande av produkt med mock-data');
+    const newId = mockProducts.length > 0 
+  ? Math.max(...mockProducts.map(p => p.id)) + 1 
+  : 1;
+
     const newProduct = {
-      id: mockProducts.length + 1,
+      id: newId,
       ...product
     };
     mockProducts.push(newProduct);
