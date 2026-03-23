@@ -8,7 +8,6 @@ const mockProducts = [
     name: 'Premium Laptop', 
     price: 12999, 
     description: 'Högpresterande laptop med 16GB RAM och 512GB SSD', 
-    imageUrl: "https://images.unsplash.com/photos/macbook-pro-RSCirJ70NDM",
     stock: 8, 
   },
   { 
@@ -16,7 +15,6 @@ const mockProducts = [
     name: 'Trådlös Mus', 
     price: 399, 
     description: 'Ergonomisk trådlös mus med lång batteritid', 
-    imageUrl: "https://images.unsplash.com/photos/a-computer-mouse-sitting-on-top-of-an-orange-surface-JVUqiEc2Svc",
     stock: 15 
   },
   { 
@@ -24,7 +22,6 @@ const mockProducts = [
     name: '27" 4K Skärm', 
     price: 3499, 
     description: '4K UHD skärm med IPS-panel', 
-    imageUrl: "https://images.unsplash.com/photos/black-flat-screen-tv-turned-off-lVuV7AcfOrY",
     stock: 5 
   }
 ];
