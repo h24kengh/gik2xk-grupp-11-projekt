@@ -49,23 +49,23 @@ export async function getAll(endpoint = '/products') {
 
 export async function getOne(id) {
   try {
+    // 1. Försök hämta från "servern" (API)
     const response = await axios.get(`/products/${id}`);
     if (response.status === 200) {
       return response.data;
     }
-    return null;
-  } catch(e) {
-    // VIKTIG ÄNDRING HÄR:
-    // Leta i 'products' (den lista som uppdateras), inte den fasta 'mockProducts'
-    // Vi använder == för att strunta i om id är "4" (sträng) eller 4 (nummer)
-    const product = mockProducts.find(p => p.id == id); 
-    
+  } catch (e) {
+    // 2. Om servern inte svarar (vilket sker i din miljö), leta i mockProducts
+    console.log(`Letar efter ID: ${id} i mock-data...`);
+
+    // Här gör vi om både p.id och id till strängar för att vara 100% säkra
+    const product = mockProducts.find(p => String(p.id) === String(id));
+
     if (product) {
-      console.log(`Hittade produkt ${id} i lokal data`);
       return product;
     }
     
-    e?.response ? console.log(e.response.data) : console.log(e);
+    console.error("Produkten hittades inte i mockProducts:", id);
     return null;
   }
 }
