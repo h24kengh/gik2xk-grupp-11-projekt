@@ -8,7 +8,8 @@ import {
 } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useCart } from '../CartContext.jsx';
-
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import DeleteIcon from '@mui/icons-material/Delete'
 function Cart() {
   const {
     cartItems,
@@ -64,6 +65,7 @@ function Cart() {
                     </Button>
 
                     <Button
+                      startIcon={<DeleteIcon/>}
                       variant="contained"
                       color="error"
                       onClick={() => removeFromCart(item.id)}
@@ -81,12 +83,12 @@ function Cart() {
             Totalt: {totalPrice.toFixed(2)} kr
           </Typography>
 
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-            <Button variant="contained" color="error" onClick={clearCart} fullWidth>
+          <Stack  direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+            <Button startIcon={<DeleteIcon/>} variant="contained" color="error" onClick={clearCart} fullWidth>
               Töm kundkorg
             </Button>
 
-            <Button variant="outlined" component={Link} to="/" fullWidth>
+            <Button startIcon={<ChevronLeftIcon/>} color="success" variant="contained" component={Link} to="/" fullWidth>
               Fortsätt handla
             </Button>
           </Stack>

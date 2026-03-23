@@ -8,6 +8,7 @@ import ProductDetail from './views/ProductDetail.jsx';
 import Cart from './views/Cart.jsx';
 import ProductForm from './views/ProductForm.jsx';
 import { CartProvider } from './CartContext.jsx';
+import { CssBaseline } from '@mui/material';
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,7 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+    <CssBaseline />
     <CartProvider>
       <RouterProvider router={router} />
     </CartProvider>

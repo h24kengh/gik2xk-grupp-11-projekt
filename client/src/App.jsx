@@ -11,6 +11,7 @@ import {
   ListItemButton,
   ListItemText,
   Divider,
+  Container
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useState } from 'react';
@@ -35,7 +36,7 @@ function App() {
 
   return (
     <>
-      <Box sx={{ flexGrow: 1 }}>
+      <Box component="header" sx={{ flexGrow: 1 }}>
         <AppBar position="static">
           <Toolbar sx={{ justifyContent: 'space-between' }}>
             {/* Vänster: logga / namn */}
@@ -55,7 +56,7 @@ function App() {
             </Typography>
 
             {/* Desktop-meny */}
-            <Box
+            <Box component="header"
               sx={{
                 display: { xs: 'none', md: 'flex' },
                 gap: 1,
@@ -94,7 +95,7 @@ function App() {
           open={drawerOpen}
           onClose={toggleDrawer(false)}
         >
-          <Box
+          <Box component="header"
             sx={{ width: 260 }}
             role="presentation"
             onClick={toggleDrawer(false)}
@@ -122,8 +123,9 @@ function App() {
           </Box>
         </Drawer>
       </Box>
-
+      <Container sx={{mt: 4 }} maxWidth="xl" component="main">
       <Outlet />
+      </Container>
     </>
   );
 }

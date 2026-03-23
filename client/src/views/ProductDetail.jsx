@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useCart } from '../CartContext.jsx';
 import { getOne } from '../services/ProductService';
 import { useEffect, useState } from 'react';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 function ProductDetail() {
   const { id } = useParams();
@@ -57,10 +58,11 @@ function ProductDetail() {
         <Typography variant="body1" sx={{ mt: 2, mb: 3 }}>
           Produkt-id från URL: {id}
         </Typography>
-        <Button 
+        <Button
+          startIcon={<ChevronLeftIcon />}
           variant="contained" 
           onClick={() => navigate('/')}
-        >
+          >
           Tillbaka till produkter
         </Button>
       </Box>
@@ -111,6 +113,7 @@ function ProductDetail() {
             </Typography>
 
             <Button
+              color="success"
               variant="contained"
               size="large"
               fullWidth
@@ -121,6 +124,7 @@ function ProductDetail() {
             </Button>
 
             <Button
+              startIcon={<ChevronLeftIcon />}
               variant="outlined"
               size="large"
               fullWidth

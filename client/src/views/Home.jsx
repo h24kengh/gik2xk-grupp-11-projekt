@@ -1,19 +1,16 @@
-import PostList from '../components/ProductList';
-import TagList from '../components/TagList';
-import { Grid } from '@mui/material';
+import ProductList from '../components/ProductList';
+import { Grid, Paper, Typography } from '@mui/material';
 
 function Home() {
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={12} md={9}>
-        <PostList />
+    <Grid container spacing={8}>
+      <Grid component="section" item xs={12} md={9}>
+        <Paper elevation={3} sx={{p: 2, mt: 4, borderRadius: 2}}>
+        <ProductList />
+        </Paper>
       </Grid>
-
-      <Grid item xs={12} md={3}>
-        <TagList />
       </Grid>
-    </Grid>
-  );
-}
+  )
+};
 
 export default Home;

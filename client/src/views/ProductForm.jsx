@@ -2,6 +2,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Box, Typography, TextField, Button, Stack, Alert, CircularProgress } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { getOne, create, update, remove } from '../services/ProductService';
+import SaveIcon from '@mui/icons-material/Save';
+
 
 function ProductForm() {
   const { id } = useParams();
@@ -55,7 +57,7 @@ function ProductForm() {
 
   function onDelete() {
     remove(id).then(response => console.log(response));
-    navigate('/', (-1) );
+    navigate('/');
   }
 
   const validateForm = () => {
@@ -191,34 +193,39 @@ function ProductForm() {
             disabled={loading}
             inputProps={{ min: 0 }}
           />
-
+          <Box display="flex" gap={2} mt={2}>
           <Button 
+            startIcon={<SaveIcon/>}
+            color="success"
             type="submit" 
             variant="contained" 
             size="large"
             disabled={loading}
-            sx={{ mt: 2 }}
-          >
-            {loading ? 'Sparar...' : (isEditMode ? 'Spara ändringar' : 'Skapa produkt')}
+            sx={{ flex: 1}}
+            >
+            {loading ? 'Sparar...' : (isEditMode ? 'Spara' : 'Skapa produkt')}
           </Button>
 
           <Button 
-            variant="contained" 
+            variant="outlined" 
             size="large"
-            color ="error"
             onClick={() => navigate(-1)}
             disabled={loading}
+            sx={{flex: 1}}
           >
             Avbryt
           </Button>
 
-          <Button onClick={onDelete} variant="contained" color="error" >
+          <Button
+            onClick={onDelete}
+            variant="contained" 
+            color="error" 
+            size="large"
+            sx={{flex: 1}}
+            >
             Ta bort
           </Button>
-
-         {/*  <Button onClick={onSave} variant="contained" color= "success">
-            Spara
-          </Button> */}
+          </Box>
 
         </Stack>
       </form>

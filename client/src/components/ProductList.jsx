@@ -11,6 +11,7 @@ import { useCart } from '../CartContext.jsx';
 import { Link } from 'react-router-dom';
 import { getAll } from '../services/ProductService';
 import { useEffect, useState } from 'react';
+import EditIcon from '@mui/icons-material/Edit';
 
 
 function ProductList({pathname}) {
@@ -92,6 +93,7 @@ useEffect(() => {
                 }}
               >
                 <Button
+                  color="success"
                   variant="contained"
                   fullWidth
                   onClick={() => addToCart(product.id, 1, 1)}
@@ -108,6 +110,7 @@ useEffect(() => {
                   Visa produkt
                 </Button>
                   <Button
+                    startIcon={<EditIcon />}
                     variant="contained"
                     fullWidth
                     component={Link}
