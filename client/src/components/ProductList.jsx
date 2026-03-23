@@ -72,6 +72,12 @@ useEffect(() => {
                   {product.price} kr
                 </Typography>
 
+                <CardMedia
+                  component="img"
+                  sx={{ height: 200, objectFit: 'cover' }}
+                  image={product.imageUrl || placeholderImage}
+                  alt= {product.name}
+                />
 
                 <Typography
                   variant="body2"
