@@ -2,35 +2,6 @@ const router = require("express").Router();
 
 const product = require("../models/product");
 const postService = require ('../services/productService');
-/* const constraints = { 
-
-    email: { 
-        length: {
-        minimun: 4,
-        maximum: 200,
-        tooShort: "^E-postadressen måste vara minst %{count} tecken lång.",
-        tooLong: "^E-postadressen får inte vara längre än %{count} tecken lång."
-        },
-        email: {
-        message: "^E-postadressen måste vara en giltig e-postadress."
-        }
-},
-username: {
-length: {
-        minimun: 3,
-        maximum: 50,
-        tooShort: "^Användarnamnet måste vara minst %{count} tecken långt.",
-        tooLong: "^Användarnamnet får inte vara längre än %{count} tecken långt."
-        }
-},
-imageurl: {
-    url: {
-        message: 'Sökvägen är felaktig.'
-    }
-}
-};
- */
-            
                 
 router.post("/:id/comments", (req, res) => {
   const comment = req.body;

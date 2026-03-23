@@ -16,7 +16,7 @@ function ProductRating({ productId, userId, onRatingChange }) {
 
   const fetchRatings = async () => {
     try {
-      const response = await fetch(`http://localhost:3000/api/products/${productId}/ratings`);
+      const response = await fetch(`http://localhost:5000/api/products/${productId}/ratings`);
       const data = await response.json();
       
       setAverageRating(data.averageRating);
@@ -40,15 +40,23 @@ function ProductRating({ productId, userId, onRatingChange }) {
       return;
     }
     
+    if(newValue === null) {
+      setError('Ogiltigt betyg');
+      return;
+    }
+    
     setRating(newValue);
     setLoading(true);
     setError('');
     
     try {
-      const response = await fetch(`http://localhost:3000/api/products/${productId}/ratings`, {
+      const response = await fetch(`http://localhost:5000/api/products/${productId}/ratings`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, value: newValue })
+        body: JSON.stringify({ 
+          user_id: userId,
+          product_id: productId,
+          value: newValue })
       });
       
       if (response.ok) {
