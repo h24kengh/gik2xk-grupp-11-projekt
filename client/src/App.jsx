@@ -21,8 +21,10 @@ function App() {
   const { cartItems } = useCart();
   const [drawerOpen, setDrawerOpen] = useState(false);
 
+  // Räknar ut totalt antal produkter i kundkorgen
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
+  // Navigationslänkar som används i mobilmenyn
   const menuItems = [
     { text: `Kundkorg (${totalItems})`, path: '/cart' },
     { text: 'Produktdetaljer', path: '/product/1' },
@@ -30,6 +32,7 @@ function App() {
     { text: 'Lägg till produkt', path: '/product/new' },
   ];
 
+  // Öppnar eller stänger mobilmenyn
   const toggleDrawer = (open) => () => {
     setDrawerOpen(open);
   };
@@ -39,7 +42,7 @@ function App() {
       <Box component="header" sx={{ flexGrow: 1 }}>
         <AppBar position="static">
           <Toolbar sx={{ justifyContent: 'space-between' }}>
-            {/* Vänster: logga / namn */}
+            {/* Logotyp/namn som länkar till startsidan */}
             <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
               <Button
                 color="inherit"
@@ -55,7 +58,7 @@ function App() {
               </Button>
             </Typography>
 
-            {/* Desktop-meny */}
+            {/* Desktop-meny – visas endast på större skärmar */}
             <Box component="header"
               sx={{
                 display: { xs: 'none', md: 'flex' },
@@ -71,7 +74,7 @@ function App() {
               </Button>
             </Box>
 
-            {/* Mobil-menyknapp */}
+            {/* Hamburgerknapp – visas endast på mindre skärmar */}
             <IconButton
               color="inherit"
               edge="end"
@@ -83,12 +86,13 @@ function App() {
           </Toolbar>
         </AppBar>
 
-        {/* Mobil drawer */}
+        {/* Mobil drawer – glider in från höger */}
         <Drawer
           anchor="right"
           open={drawerOpen}
           onClose={toggleDrawer(false)}
         >
+          {/* Stänger drawern vid klick eller tangenttryckning */}
           <Box component="header"
             sx={{ width: 260 }}
             role="presentation"
@@ -108,6 +112,7 @@ function App() {
                 <ListItemText primary="Webbshop" />
               </ListItemButton>
 
+              {/* Renderar alla menyalternativ dynamiskt */}
               {menuItems.map((item) => (
                 <ListItemButton key={item.text} component={Link} to={item.path}>
                   <ListItemText primary={item.text} />
@@ -117,8 +122,10 @@ function App() {
           </Box>
         </Drawer>
       </Box>
+
+      {/* Huvudinnehåll – renderar aktuell sida via React Router */}
       <Container sx={{mt: 4 }} maxWidth="xl" component="main">
-      <Outlet />
+        <Outlet />
       </Container>
     </>
   );

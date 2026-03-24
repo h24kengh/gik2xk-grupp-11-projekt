@@ -1,13 +1,15 @@
+/* Tar bort understrykning och ärver färg från förälder på alla länkar */
 a, a:hover {
   text-decoration: none;
   color: inherit;
 }
 
+/* Tar bort standard-indentering på listor */
 ul {
   padding: 0;
 }
 
+/* Tar bort listpunkter */
 li {
   list-style-type: none;
 }
-

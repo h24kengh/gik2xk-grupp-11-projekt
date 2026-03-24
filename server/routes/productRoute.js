@@ -9,7 +9,8 @@ const router = require("express").Router();
 
 const product = require("../models/product");
 const postService = require ('../services/productService');
-                
+
+// Lägger till en kommentar på en specifik produkt
 router.post("/:id/comments", (req, res) => {
   const comment = req.body;
   const id = req.params.id;
@@ -18,6 +19,7 @@ router.post("/:id/comments", (req, res) => {
    });
 });
 
+// Hämtar en enskild produkt via ID
 router.get("/:id", async (reg, res) => {
     const id = req.params.id;
 
@@ -26,18 +28,22 @@ router.get("/:id", async (reg, res) => {
    });
 });
 
+// Hämtar alla produkter
 router.get('/', (req, res) => {
    productService.getAll().then ((result) => {
     res.status(result.status).json(result.data);
    });
 });
 
+// Skapar en ny produkt
 router.post('/', (req, res) => {
     const product = req.body;
       productService.create(product).then ((result) => {
       res.status(result.status).json(result.data);
    });
 });
+
+// Uppdaterar en befintlig produkt – ID hämtas från request body
 router.put('/', (req, res) => {
      const post = req.body;
      const id = post.id;
@@ -46,17 +52,14 @@ router.put('/', (req, res) => {
      res.status(result.status).json(result.data);
    });
 });
-router.delete('/', (req, res) => {
 
+// Tar bort en produkt – ID hämtas från request body
+router.delete('/', (req, res) => {
   const id = req.body.id
 
     postService.destroy(id).then ((result) => {
     res.status(result.status).json(result.data);
     });
-
-
 });
-
-
 
 module.exports = router;

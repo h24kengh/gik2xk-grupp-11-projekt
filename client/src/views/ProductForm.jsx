@@ -8,7 +8,7 @@ import SaveIcon from '@mui/icons-material/Save';
 function ProductForm() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const isEditMode = Boolean(id);
+  const isEditMode = Boolean(id); // True om ett ID finns i URL:en, dvs redigeringsläge
 
   const [formData, setFormData] = useState({
     name: '',
@@ -19,7 +19,7 @@ function ProductForm() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [fetchLoading, setFetchLoading] = useState(isEditMode);
+  const [fetchLoading, setFetchLoading] = useState(isEditMode); // Laddning vid hämtning av befintlig produkt
 
   // Hämta produkt om vi är i redigeringsläge
   useEffect(() => {
@@ -48,6 +48,7 @@ function ProductForm() {
     }
   }, [id, isEditMode]);
 
+  // Uppdaterar formData när användaren skriver i ett fält
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -57,11 +58,13 @@ function ProductForm() {
     if (error) setError('');
   };
 
+  // Tar bort produkten och navigerar tillbaka till startsidan
   function onDelete() {
     remove(id).then(response => console.log(response));
     navigate('/');
   }
 
+  // Validerar att alla fält är korrekt ifyllda innan sparning
   const validateForm = () => {
     if (!formData.name.trim()) {
       setError('Produktnamn måste anges');
@@ -93,6 +96,7 @@ function ProductForm() {
     setError('');
 
     try {
+      // Konverterar pris och lagersaldo till rätt datatyper innan sparning
       const productData = {
         name: formData.name,
         price: parseFloat(formData.price),
@@ -106,7 +110,7 @@ function ProductForm() {
         const result = await update(id, productData);
         if (result) {
           console.log('Produkt uppdaterad:', result);
-          navigate(`/product/${id}`); // Gå till produktsidan
+          navigate(`/product/${id}`);
         } else {
           setError('Kunde inte uppdatera produkten');
         }
@@ -115,7 +119,7 @@ function ProductForm() {
         const result = await create(productData);
         if (result) {
           console.log('Ny produkt skapad:', result);
-          navigate(`/product/${result.id}`); // Gå till den nya produkten
+          navigate(`/product/${result.id}`); // Navigera till den nyskapade produktens sida
         } else {
           setError('Kunde inte skapa produkten');
         }
@@ -128,16 +132,17 @@ function ProductForm() {
     }
   };
 
+  // Läser in en lokal bildfil och sparar den som Base64-sträng i formData
   const handleFileChange = (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setFormData({ ...formData, image: reader.result }); // Sparar bilden som en Base64-sträng
-    };
-    reader.readAsDataURL(file);
-  }
-};
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setFormData({ ...formData, image: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   // Visa laddningsindikator medan vi hämtar produkt (redigeringsläge)
   if (fetchLoading) {
@@ -150,6 +155,7 @@ function ProductForm() {
 
   return (
     <Box sx={{ px: { xs: 2, sm: 4 }, py: 4, maxWidth: 600, mx: 'auto' }}>
+      {/* Rubriken ändras beroende på om det är redigering eller skapande */}
       <Typography variant="h4" sx={{ mb: 3, fontWeight: 'bold' }}>
         {isEditMode ? `Ändra produkt` : 'Ny produkt'}
       </Typography>
@@ -228,13 +234,14 @@ function ProductForm() {
             disabled={loading}
             sx={{ flex: 1}}
             >
+            {/* Knappens text ändras beroende på läge och laddningsstatus */}
             {loading ? 'Sparar...' : (isEditMode ? 'Spara' : 'Skapa produkt')}
           </Button>
 
           <Button 
             variant="outlined" 
             size="large"
-            onClick={() => navigate(-1)}
+            onClick={() => navigate(-1)} // Går tillbaka till föregående sida
             disabled={loading}
             sx={{flex: 1}}
           >
@@ -252,19 +259,22 @@ function ProductForm() {
           </Button>
 
           </Box>
-             <Button 
+
+          {/* Knapp för att ladda upp en lokal bildfil */}
+          <Button 
           variant="outlined" 
           component="label"
           size='large'
           sx={{ 
-           py: 1.5, // Justerar höjden så den matchar TextField/Button exakt
-           textTransform: 'none', // Valfritt: hindrar knappen från att bara ha stora bokstäver
-           borderColor: 'rgba(0, 0, 0, 0.23)' // Matchar färgen på TextField-kanter
+           py: 1.5,
+           textTransform: 'none',
+           borderColor: 'rgba(0, 0, 0, 0.23)'
           }}>
           Bifoga bild(PNG/JPG)
           {<input type="file" hidden accept="image/*" onChange={handleFileChange} />}
           </Button>
           
+          {/* Förhandsgranskning av vald bild */}
           {formData.image && (
           <Box sx={{ textAlign: 'center', mt: 1 }}>
           <img src={formData.image} alt="Preview" style={{ height: 100, borderRadius: 8 }} />

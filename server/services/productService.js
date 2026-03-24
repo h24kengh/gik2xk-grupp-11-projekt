@@ -8,6 +8,7 @@ const validate = require('validate.js');
 const post = require('../models/product');
 const user = require('../models/user');
 
+// Valideringsregler för användardata
 const constraints = { 
     email: { 
         length: {
@@ -35,6 +36,7 @@ imageurl: {
 }
 };
 
+// Statisk mock-data för produkter (används som fallback)
 const products = [
     {
       id: 1,
@@ -62,6 +64,7 @@ const products = [
     },
   ];
 
+// Hämtar alla produkter kopplade till en specifik tagg
 async function getByTag(tagId) {
     try {
         const tag = await db.tag.findOne({ where: {id: tagId } });
@@ -73,6 +76,7 @@ async function getByTag(tagId) {
     }
 }
 
+// Hämtar alla produkter skrivna av en specifik användare
 async function getByAuthor(userId) {
     try {
         const user = await db.user.findOne({ where: {id: userId } });
@@ -84,7 +88,7 @@ async function getByAuthor(userId) {
     }
 }
 
-// ========== ÄNDRAD: getById med rating ==========
+// Hämtar en enskild produkt med kommentarer, taggar och betyg
 async function getById(id) {
     try {
         const product = await db.product.findOne({
@@ -106,7 +110,7 @@ async function getById(id) {
 
         if (!product) return createResponseError(404, "Produkten hittades inte.");
         
-        //  formatera med snittbetyg
+        // Formatera med snittbetyg innan returnering
         const formattedProduct = _formatProductWithRating(product);
         return createResponseSuccess(formattedProduct);
     } catch (error) {
@@ -114,7 +118,7 @@ async function getById(id) {
     }
 }
 
-// ========== ÄNDRAD: getAll med rating ==========
+// Hämtar alla produkter med taggar och betyg, med valfri sökning på titel
 async function getAll(searchTerm) {
     try {
         const whereClause = searchTerm ? {
@@ -125,7 +129,7 @@ async function getAll(searchTerm) {
             where: whereClause,
             include: [
                 db.tag,
-                {   //  inkludera ratings
+                {   // inkludera ratings
                     model: db.rating,
                     as: 'ratings',
                     required: false
@@ -133,7 +137,7 @@ async function getAll(searchTerm) {
             ]
         });
         
-        // formatera med snittbetyg
+        // Formatera varje produkt med snittbetyg
         const formattedProducts = allProducts.map(product => _formatProductWithRating(product));
         return createResponseSuccess(formattedProducts);
     } catch (error) {
@@ -141,7 +145,7 @@ async function getAll(searchTerm) {
     }
 }
 
-// ========== NY FUNKTION: Lägg till betyg ==========
+// Lägger till eller uppdaterar ett betyg för en produkt
 async function addRating(productId, userId, value) {
     if (!productId || !userId || !value) {
         return createResponseError(422, "Produkt-ID, användar-ID och betyg krävs");
@@ -158,7 +162,7 @@ async function addRating(productId, userId, value) {
             return createResponseError(404, "Produkten hittades inte");
         }
         
-        // Skapa eller uppdatera betyg
+        // Skapar ett nytt betyg eller uppdaterar om användaren redan betygsatt
         const [rating, created] = await db.rating.findOrCreate({
             where: { 
                 product_id: productId, 
@@ -171,6 +175,7 @@ async function addRating(productId, userId, value) {
             }
         });
         
+        // Om betyget redan fanns, uppdatera värdet
         if (!created) {
             rating.value = value;
             await rating.save();
@@ -183,7 +188,7 @@ async function addRating(productId, userId, value) {
     }
 }
 
-// ========== NY FUNKTION: Hämta betyg för produkt ==========
+// Hämtar alla betyg för en produkt samt beräknar snittbetyg
 async function getRatings(productId) {
     if (!productId) {
         return createResponseError(422, "Produkt-ID krävs");
@@ -195,6 +200,7 @@ async function getRatings(productId) {
             attributes: ['value', 'user_id', 'createdAt']
         });
         
+        // Beräknar snittbetyg, returnerar 0 om inga betyg finns
         const averageRating = ratings.length > 0
             ? ratings.reduce((sum, r) => sum + r.value, 0) / ratings.length
             : 0;
@@ -210,8 +216,8 @@ async function getRatings(productId) {
     }
 }
 
+// Lägger till en kommentar på en specifik produkt
 async function addComment(productId, comment) {
-   
     if (!id) {
        return createResponseError(422, "ID är obligatoriskt");
     }  
@@ -223,24 +229,24 @@ async function addComment(productId, comment) {
     } catch (error) {
         return createResponseError(error.status, error.message);
     }
-  
 }
 
+// Skapar en ny produkt och kopplar eventuella taggar
 async function create(productData) {
     const invalidData = validate(post, constraints);
     if (invalidData) {
        return createResponseError(422, invalidData);
     }  try {
            const newProduct =  await db.product.create(productData);
-            //post tags är en  array av namn
-           //lägga till eventuella taggar
+           // Lägger till eventuella taggar kopplade till produkten
            await _addTagToPost(newPost, post.tags);
            return createResponseSuccess(newProduct);
         } catch (error) {
         return createResponseError(error.status, error.message);
     }
-  
 }
+
+// Uppdaterar lagersaldot för en produkt
 async function update(productId, qtyChange) {
         const invalidData = validate(post, constraints);
         if(!id) {
@@ -255,6 +261,7 @@ async function update(productId, qtyChange) {
             return createResponseError(404, "Hittade inget inlägg att uppdatera.");
             }
             await _addTagToPost(existingPost, post.tags);
+            // Säkerställer att lagersaldot aldrig blir negativt
             const newQty = Math.max(0,product.inventory_qty + quantityChange);
             await db.product.update({inventory_qty: newQty
             });
@@ -263,9 +270,9 @@ async function update(productId, qtyChange) {
             } catch(error) {
             return createResponseError(error.status, error.message);
             }
-           
-        
 }
+
+// Tar bort en produkt permanent från databasen
 async function destroy(id) {
     if(!id) {
         return createResponseError(422, "ID är obligatoriskt!");
@@ -280,7 +287,7 @@ async function destroy(id) {
     }
 }
 
-// ========== NY HJÄLPFUNKTION: Formatera produkt med betyg ==========
+// Hjälpfunktion: Formaterar en produkt och lägger till snittbetyg och betygsinfo
 function _formatProductWithRating(product) {
     const ratings = product.ratings || [];
     const totalRatings = ratings.length;
@@ -288,10 +295,10 @@ function _formatProductWithRating(product) {
         ? ratings.reduce((sum, r) => sum + r.value, 0) / totalRatings
         : 0;
     
-    // Behåll original-produkten oförändrad
+    // Konverterar Sequelize-objekt till vanligt JS-objekt
     const formattedProduct = product.toJSON ? product.toJSON() : product;
     
-    // Lägg till rating-information
+    // Lägger till beräknad betygsinformation på produktobjektet
     formattedProduct.averageRating = parseFloat(averageRating.toFixed(1));
     formattedProduct.totalRatings = totalRatings;
     formattedProduct.ratings = ratings.map(r => ({
@@ -303,6 +310,7 @@ function _formatProductWithRating(product) {
     return formattedProduct;
 }
 
+// Hjälpfunktion: Formaterar ett inlägg med författare, kommentarer och taggar
 function _formatPost(post) {
     const cleanPost = {
         id: post.id,
@@ -326,12 +334,10 @@ function _formatPost(post) {
     post.comments.map((comment) => {
         return (cleanPost.comments = [
             {
-
             title: comment.title,
             body: comment.body,
             author: comment.user.username,
             createdAt: comment.createdAt
-
             }, 
             ...cleanPost.comments
         ]);
@@ -345,6 +351,7 @@ function _formatPost(post) {
    }
 }
 
+// Hjälpfunktion: Hittar eller skapar en tagg baserat på namn
 async function _findOrCreateTagId(name) {
     name = name.toLowerCase().trim();
     const foundOrCreatedTag = await db.tag.findOrCreate({where: { name } });
@@ -352,6 +359,7 @@ async function _findOrCreateTagId(name) {
     return foundOrCreatedTag[0].id;
 }
 
+// Hjälpfunktion: Kopplar en lista av taggar till ett inlägg
 async function _addTagToPost(post, tags) {
     if (tags) {
         tags.foreach(async (tag) => {

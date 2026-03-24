@@ -4,6 +4,7 @@ const validate = require('validate.js');
 const user = require("../models/user");
 const postService = require("../services/productService")
 
+// Valideringsregler för användardata
 const constraints = { 
     email: { 
         length: {
@@ -15,37 +16,39 @@ const constraints = {
         email: {
         message: "^E-postadressen måste vara en giltig e-postadress."
         }
-},
-username: {
-length: {
+    },
+    username: {
+        length: {
         minimun: 3,
         maximum: 50,
         tooShort: "^Användarnamnet måste vara minst %{count} tecken långt.",
         tooLong: "^Användarnamnet får inte vara längre än %{count} tecken långt."
         }
-},
-imageurl: {
-    url: {
+    },
+    imageurl: {
+        url: {
         message: 'Sökvägen är felaktig.'
+        }
     }
-}
 };
 
+// Hämtar alla produkter skrivna av en specifik användare
 router.get("/:id/posts", (req, res) => {
    const id = req.params.id;
   
       postService.getByAuthor(id).then ((result) => {
       res.status(result.status).json(result.data);
      });
-
 });
 
+// Hämtar alla användare
 router.get('/', (req, res) => {
     db.users.findAll().then((result) => {
         res.send(result);
     });
 });
 
+// Skapar en ny användare – validerar datan innan sparning
 router.post('/', (req, res) => {
     const user = req.body;
     const invalidData = validate(user, constraints);
@@ -57,6 +60,8 @@ router.post('/', (req, res) => {
     });
   }
 });
+
+// Uppdaterar en befintlig användare – kräver giltigt ID och validerad data
 router.put('/', (req, res) => {
      const user = req.body;
     const invalidData = validate(user, constraints);
@@ -64,15 +69,17 @@ router.put('/', (req, res) => {
     if(invalidData || !id) {
         res.status(400).json(invalidData || 'Id är obligatoriskt.');
     } else {
- db.users
-  .update(user, {
-    where: { id: user.id }
-  })
-    .then((result) => { 
-        res.send(result);
-    });
+        db.users
+        .update(user, {
+            where: { id: user.id }
+        })
+        .then((result) => { 
+            res.send(result);
+        });
     }
 });
+
+// Tar bort en användare via ID i request body
 router.delete('/', (req, res) => {
   db.users
   .destroy({
@@ -81,7 +88,5 @@ router.delete('/', (req, res) => {
     res.json(`produkten raderades ${result}`);
   });
 });
-
-
 
 module.exports = router;

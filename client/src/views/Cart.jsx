@@ -11,7 +11,9 @@ import { useCart } from '../CartContext.jsx';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import DeleteIcon from '@mui/icons-material/Delete'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+
 function Cart() {
+  // Hämtar kundvagnsdata och funktioner från context
   const {
     cartItems,
     removeFromCart,
@@ -27,6 +29,7 @@ function Cart() {
         Kundkorg
       </Typography>
 
+      {/* Visar tomt-meddelande om kundkorgen är tom, annars listas produkterna */}
       {cartItems.length === 0 ? (
         <>
         <Typography>Din kundkorg är tom.</Typography>
@@ -47,6 +50,7 @@ function Cart() {
       ) : (
         <>
           <Stack spacing={2}>
+            {/* Loopar igenom varje produkt i kundkorgen */}
             {cartItems.map((item, index) => (
               <Card key={item.id || index}>
                 <CardContent>
@@ -56,10 +60,12 @@ function Cart() {
 
                   <Typography>Pris: {item.price} kr</Typography>
                   <Typography>Antal: {item.quantity}</Typography>
+                  {/* Räknar ut delsumma för denna produkt */}
                   <Typography sx={{ mb: 2 }}>
                     Summa: {(Number(item.price) * Number(item.quantity)).toFixed(2)} kr
                   </Typography>
 
+                  {/* Knappar för att ändra antal eller ta bort produkten */}
                   <Stack
                     direction={{ xs: 'column', sm: 'row' }}
                     spacing={1}
@@ -95,10 +101,12 @@ function Cart() {
             ))}
           </Stack>
 
+          {/* Visar totalpriset för alla produkter i kundkorgen */}
           <Typography variant="h5" sx={{ mt: 3, mb: 2 }}>
             Totalt: {totalPrice.toFixed(2)} kr
           </Typography>
 
+          {/* Knappar för att tömma kundkorgen eller fortsätta handla */}
           <Stack  direction={{ xs: 'column', sm: 'row' }} spacing={2}>
             <Button startIcon={<DeleteIcon/>} variant="contained" color="error" onClick={clearCart} fullWidth>
               Töm kundkorg

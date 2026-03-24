@@ -1,3 +1,4 @@
+// Definierar Rating-modellen för betyg kopplade till produkter
 module.exports = (sequelize, DataTypes) => {
   const Rating = sequelize.define("rating", {
     id: {
@@ -9,22 +10,22 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
-        min: 1,
-        max: 5
+        min: 1, // Lägsta tillåtna betyg
+        max: 5  // Högsta tillåtna betyg
       }
     },
     user_id: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true // Kan vara null om användaren inte är inloggad
     },
     product_id: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false // Varje betyg måste tillhöra en produkt
     }
   }, {
-    underscored: true,
+    underscored: true, // Använder snake_case i databasen
     tableName: 'ratings',
-    timestamps: true
+    timestamps: true   // Lägger automatiskt till createdAt och updatedAt
   });
 
   return Rating;

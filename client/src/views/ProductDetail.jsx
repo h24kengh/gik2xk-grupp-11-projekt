@@ -10,6 +10,7 @@ import laptop from '../assets/laptop.jpg';
 import mus from '../assets/mus.jpg';
 import skarm from '../assets/skarm.jpg';
 
+// Kopplar produkt-ID till lokal bildfil
 const imageMap = {
   1: laptop,
   2: mus,
@@ -17,7 +18,7 @@ const imageMap = {
 };
 
 function ProductDetail() {
-  const { id } = useParams();
+  const { id } = useParams(); // Hämtar produkt-ID från URL
   const { addToCart } = useCart();
   const navigate = useNavigate();
 
@@ -26,45 +27,47 @@ function ProductDetail() {
   const [error, setError] = useState(null);
   const [ratings, setRatings] = useState([]);
 
- useEffect(() => {
-  if (!id) {
-    setError('Inget produkt-ID angivet');
-    setLoading(false);
-    return;
-  }
-
-  setLoading(true);
-
-  getOne(id)
-    .then((data) => {
-      if (data) {
-        // 1. Kolla om vi behöver hämta bild från imageMap (för Laptop, Mus, Skärm)
-        if (!data.image) {
-          data.image = imageMap[data.id];
-        }
-
-        // 2. Spara produkten i state (detta ska ske för ALLA produkter som hittas)
-        setProduct(data);
-        setError(null);
-        return fetch(`http://localhost:5000/api/products/${id}/ratings`)
-          .then(res => res.json())
-          .then(ratingData => {
-            setRatings(ratingData.ratings || []);
-          });
-      } else {
-        // Om data är null/undefined från getOne
-        setError('Produkten hittades inte');
-      }
-    })
-    .catch((err) => {
-      console.error('Fel vid hämtning:', err);
-      setError('Kunde inte hämta produkten');
-    })
-    .finally(() => {
+  useEffect(() => {
+    if (!id) {
+      setError('Inget produkt-ID angivet');
       setLoading(false);
-    });
-}, [id]);
+      return;
+    }
 
+    setLoading(true);
+
+    getOne(id)
+      .then((data) => {
+        if (data) {
+          // Om produkten saknar bild, tilldela en från imageMap
+          if (!data.image) {
+            data.image = imageMap[data.id];
+          }
+
+          setProduct(data);
+          setError(null);
+
+          // Hämtar betyg för produkten efter att produktdata laddats
+          return fetch(`http://localhost:5000/api/products/${id}/ratings`)
+            .then(res => res.json())
+            .then(ratingData => {
+              setRatings(ratingData.ratings || []);
+            });
+        } else {
+          // Om getOne returnerar null/undefined
+          setError('Produkten hittades inte');
+        }
+      })
+      .catch((err) => {
+        console.error('Fel vid hämtning:', err);
+        setError('Kunde inte hämta produkten');
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [id]);
+
+  // Visar laddningsindikator medan data hämtas
   if (loading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
@@ -73,6 +76,7 @@ function ProductDetail() {
     );
   }
 
+  // Visar felmeddelande om produkten inte kunde hämtas
   if (error || !product) {
     return (
       <Box sx={{ p: 3, textAlign: 'center' }}>
@@ -102,6 +106,7 @@ function ProductDetail() {
             flexDirection: { xs: 'column', md: 'row' },
           }}
         >
+          {/* Produktbild – faller tillbaka på platshållarbild om ingen finns */}
           <Box
             component="img"
             src={product.image || placeholderImage}
@@ -137,6 +142,7 @@ function ProductDetail() {
               I lager: {product.stock} st
             </Typography>
 
+            {/* Betygskomponent – userId är hårdkodat till 1 för tillfället */}
             <ProductRating 
               productId={product.id} 
               userId={1}
@@ -166,12 +172,15 @@ function ProductDetail() {
           </CardContent>
         </Box>
       </Card> 
+
+      {/* Sektion för kundrecensioner */}
       <Card sx={{ maxWidth: 1000, mx: 'auto', borderRadius: 3, p: 3 }}>
         <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
           Kundrecensioner
         </Typography>
         <Divider sx={{ mb: 2 }} />
 
+        {/* Visar meddelande om inga recensioner finns, annars listas de */}
         {ratings.length === 0 ? (
           <Typography color="text.secondary">Inga recensioner ännu för denna produkt.</Typography>
         ) : (
@@ -186,11 +195,13 @@ function ProductDetail() {
                         <Typography component="span" variant="body2" color="text.primary">
                           Inskickat: 
                         </Typography>
+                        {/* Formaterar datum till svenskt format */}
                         {" " + new Date(r.createdAt).toLocaleString('sv-SE')}
                       </>
                     }
                   />
                 </ListItem>
+                {/* Lägger till en avdelare mellan recensioner, men inte efter den sista */}
                 {index < ratings.length - 1 && <Divider />}
               </Box>
             ))}

@@ -26,6 +26,7 @@ const mockProducts = [
   }
 ];
 
+// Hämtar alla produkter – faller tillbaka på mock-data om API:et inte svarar
 export async function getAll(endpoint = '/products') {
   try {
     const response = await axios.get(endpoint);
@@ -46,7 +47,7 @@ export async function getAll(endpoint = '/products') {
   
 }
 
-
+// Hämtar en enskild produkt – söker i mock-data om API:et inte svarar
 export async function getOne(id) {
   try {
     // 1. Försök hämta från "servern" (API)
@@ -70,6 +71,7 @@ export async function getOne(id) {
   }
 }
 
+// Skapar en ny produkt – lägger till i mock-data om API:et inte svarar
 export async function create(product) {
   try {
     const response = await axios.post('/products', product);
@@ -79,6 +81,7 @@ export async function create(product) {
     return null;
   } catch (e) {
     console.log('Simulerar skapande av produkt med mock-data');
+    // Genererar ett nytt unikt ID baserat på högsta befintliga
     const newId = mockProducts.length > 0 
   ? Math.max(...mockProducts.map(p => p.id)) + 1 
   : 1;
@@ -92,6 +95,7 @@ export async function create(product) {
   }
 }
 
+// Uppdaterar en befintlig produkt – uppdaterar mock-data om API:et inte svarar
 export async function update(id, product) {
   try {
     const response = await axios.put(`/products/${id}`, product);
@@ -102,6 +106,7 @@ export async function update(id, product) {
   } catch (e) {
     const index = mockProducts.findIndex(p => p.id === parseInt(id));
     if (index !== -1) {
+      // Slår ihop befintlig produkt med nya värden och behåller rätt ID
       mockProducts[index] = { ...mockProducts[index], ...product, id: parseInt(id) };
       return mockProducts[index];
     }
@@ -110,6 +115,7 @@ export async function update(id, product) {
   }
 }
 
+// Tar bort en produkt – tar bort ur mock-data om API:et inte svarar
 export async function remove(id) {
   try {
     const response = await axios.delete(`/products/${id}`);
@@ -120,6 +126,7 @@ export async function remove(id) {
   } catch (e) {
     const index = mockProducts.findIndex(p => p.id === parseInt(id));
     if (index !== -1) {
+      // splice returnerar en array, så vi tar första elementet
       const deleted = mockProducts.splice(index, 1);
       return deleted[0];
     }
@@ -128,6 +135,7 @@ export async function remove(id) {
   }
 }
 
+// Lägger till en produkt i en användares kundvagn
 export async function addToCart(productId, userId, amount) {
   try {
     const response = await axios.post(`/products/${productId}/addToCart`, {userId, amount});
@@ -137,6 +145,7 @@ export async function addToCart(productId, userId, amount) {
     return null;
   } catch (e) {
     console.log(`Simulerar: Användare ${userId} la till ${amount} st av produkt ${productId}`);
+    // Letar upp produkten i mock-data för att returnera ett simulerat svar
     const product = mockProducts.find(p => p.id === parseInt(productId));
     if (product) {
       return { success: true, product, amount };

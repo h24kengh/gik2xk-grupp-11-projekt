@@ -3,9 +3,7 @@ import ProductList from '../components/ProductList';
 import { useParams, useLocation } from 'react-router-dom';
 
 function Products() {
-const location = useLocation();
-
-
+  const location = useLocation(); // Ger tillgång till aktuell URL och eventuell state
 
   return (
     <Box
@@ -25,6 +23,7 @@ const location = useLocation();
         Produkter
       </Typography>
 
+      {/* Renderar listan med alla produkter */}
       <ProductList />
     </Box>
   );
