@@ -101,14 +101,6 @@ function ProductList({ pathname }) {
                   alt={product.name}
                 />
 
-                <Typography
-                  variant="body2"
-                  color="text.secondary"
-                  sx={{ mt: 2, mb: 2, fontSize: { xs: '1rem', sm: '0.95rem' }, minHeight: '3em' }}
-                >
-                  {product.description}
-                </Typography>
-
                 <Typography variant="body2" sx={{ fontWeight: 'medium' }}>
                   I lager: {product.stock} st
                 </Typography>
