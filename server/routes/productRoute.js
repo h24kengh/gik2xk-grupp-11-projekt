@@ -1,3 +1,10 @@
+/**
+ * TEKNISKT KRAV: Backend & API-struktur (RESTful API)
+ * Denna fil definierar endpoints för produkter. Vi använder Express Router för att 
+ * skapa en tydlig separation mellan rutter (routes) och affärslogik (services), 
+ * vilket ger en hållbar och skalbar arkitektur.
+ */
+
 const router = require("express").Router();
 
 const product = require("../models/product");

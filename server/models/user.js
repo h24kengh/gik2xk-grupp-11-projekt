@@ -1,7 +1,15 @@
+/**
+ * TEKNISKT KRAV: Datalagring & Användarhantering
+ * Denna modell definierar 'User'-tabellen i SQL-databasen. 
+ * Genom Sequelize säkerställer vi att användardata valideras innan den sparas,
+ * vilket höjer applikationens säkerhet och dataintegritet.
+ */
+
 const { Op } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
   return sequelize.define("user", {
+    // Primärnyckel för unik identifiering av användare
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
