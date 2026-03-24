@@ -1,5 +1,11 @@
 'use strict';
 
+/**
+ * TEKNISKT KRAV: Backend & ORM-ramverk
+ * Denna fil konfigurerar Sequelize (ORM) för att skapa en brygga mellan Node.js/Express 
+ * och SQL-databasen. Detta automatiserar interaktionen med databasen och ökar säkerheten.
+ */
+
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
@@ -9,6 +15,7 @@ const env = process.env.NODE_ENV || 'development';
 const config = require(__dirname + '/../config/config.json')[env];
 const db = {};
 
+// Initiering av Sequelize-instansen baserat på konfigurationsfilen
 let sequelize;
 if (config.use_env_variable) {
   sequelize = new Sequelize(process.env[config.use_env_variable], config);
@@ -16,6 +23,12 @@ if (config.use_env_variable) {
   sequelize = new Sequelize(config.database, config.username, config.password, config);
 }
 
+/**
+ * Dynamisk inladdning av modeller:
+ * Koden läser av mappen 'models' och importerar automatiskt alla .js-filer.
+ * Detta säkerställer en hållbar arkitektur där nya tabeller/entiteter (som 'Product' eller 'User')
+ * inkluderas automatiskt utan manuell konfiguration.
+ */
 fs
   .readdirSync(__dirname)
   .filter(file => {
@@ -31,12 +44,18 @@ fs
     db[model.name] = model;
   });
 
+  // Aktiverar associationer mellan modeller om de finns definierade i respektive fil
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }
 });
 
+/**
+ * TEKNISKT KRAV: Datalagring & Relationer
+ * Här definieras explicita relationer (Associationer) för att spegla SQL-databasens struktur.
+ * Vi kopplar samman 'Product' och 'Rating' för att kunna hämta recensioner kopplade till specifika produkter.
+ */
 
 // Rating associationer
 if (db.rating) {
@@ -53,6 +72,7 @@ if (db.product) {
   });
 }
 
+// Exporterar sequelize-objektet så att det kan användas i våra controllers/routes
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
