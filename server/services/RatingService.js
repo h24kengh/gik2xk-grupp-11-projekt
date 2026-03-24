@@ -28,7 +28,8 @@ class RatingService {
     try {
       const ratings = await Rating.findAll({
         where: { product_id: productId },
-        attributes: ['value', 'createdAt']
+        attributes: ['value', 'createdAt'],
+        order: [['createdAt', 'DESC']]
       });
 
       const averageRating = ratings.length > 0

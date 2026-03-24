@@ -1,4 +1,4 @@
-import { Box, Typography, Button, Card, CardContent, CircularProgress } from '@mui/material';
+import { Box, Typography, Button, Card, CardContent, CircularProgress, List, ListItem, ListItemText, Divider } from '@mui/material';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useCart } from '../CartContext.jsx';
 import { getOne } from '../services/ProductService';
@@ -24,6 +24,7 @@ function ProductDetail() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [ratings, setRatings] = useState([]);
 
  useEffect(() => {
   if (!id) {
@@ -45,6 +46,11 @@ function ProductDetail() {
         // 2. Spara produkten i state (detta ska ske för ALLA produkter som hittas)
         setProduct(data);
         setError(null);
+        return fetch(`http://localhost:5000/api/products/${id}/ratings`)
+          .then(res => res.json())
+          .then(ratingData => {
+            setRatings(ratingData.ratings || []);
+          });
       } else {
         // Om data är null/undefined från getOne
         setError('Produkten hittades inte');
@@ -159,6 +165,37 @@ function ProductDetail() {
             </Button>
           </CardContent>
         </Box>
+      </Card> 
+      <Card sx={{ maxWidth: 1000, mx: 'auto', borderRadius: 3, p: 3 }}>
+        <Typography variant="h5" sx={{ mb: 2, fontWeight: 'bold' }}>
+          Kundrecensioner
+        </Typography>
+        <Divider sx={{ mb: 2 }} />
+
+        {ratings.length === 0 ? (
+          <Typography color="text.secondary">Inga recensioner ännu för denna produkt.</Typography>
+        ) : (
+          <List>
+            {ratings.map((r, index) => (
+              <Box key={index}>
+                <ListItem alignItems="flex-start" sx={{ px: 0 }}>
+                  <ListItemText
+                    primary={<Typography sx={{ fontWeight: 'bold' }}>Betyg: {r.value} / 5</Typography>}
+                    secondary={
+                      <>
+                        <Typography component="span" variant="body2" color="text.primary">
+                          Inskickat: 
+                        </Typography>
+                        {" " + new Date(r.createdAt).toLocaleString('sv-SE')}
+                      </>
+                    }
+                  />
+                </ListItem>
+                {index < ratings.length - 1 && <Divider />}
+              </Box>
+            ))}
+          </List>
+        )}
       </Card>
     </Box>
   );
