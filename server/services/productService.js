@@ -96,7 +96,7 @@ async function getById(id) {
                     model: db.comment, 
                     include: [db.user] 
                 },
-                {   // ← LÄGG TILL DETTA - inkludera ratings
+                {   // inkludera ratings
                     model: db.rating,
                     as: 'ratings',
                     required: false
@@ -106,7 +106,7 @@ async function getById(id) {
 
         if (!product) return createResponseError(404, "Produkten hittades inte.");
         
-        // ← LÄGG TILL DETTA - formatera med snittbetyg
+        //  formatera med snittbetyg
         const formattedProduct = _formatProductWithRating(product);
         return createResponseSuccess(formattedProduct);
     } catch (error) {
@@ -125,7 +125,7 @@ async function getAll(searchTerm) {
             where: whereClause,
             include: [
                 db.tag,
-                {   // ← LÄGG TILL DETTA - inkludera ratings
+                {   //  inkludera ratings
                     model: db.rating,
                     as: 'ratings',
                     required: false
@@ -133,7 +133,7 @@ async function getAll(searchTerm) {
             ]
         });
         
-        // ← LÄGG TILL DETTA - formatera med snittbetyg
+        // formatera med snittbetyg
         const formattedProducts = allProducts.map(product => _formatProductWithRating(product));
         return createResponseSuccess(formattedProducts);
     } catch (error) {
@@ -361,7 +361,7 @@ async function _addTagToPost(post, tags) {
     }
 }
 
-// ========== UPPDATERAD: module.exports ==========
+
 module.exports = { 
     getByAuthor,
     getByTag,
@@ -371,6 +371,6 @@ module.exports = {
     create, 
     update, 
     destroy,
-    addRating,      // ← NY
-    getRatings      // ← NY
+    addRating,      
+    getRatings      
 };

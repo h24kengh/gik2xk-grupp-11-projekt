@@ -66,12 +66,6 @@ function App() {
               <Button color="inherit" component={Link} to="/cart">
                 Kundkorg ({totalItems})
               </Button>
-              <Button color="inherit" component={Link} to="/product/1">
-                Produktdetaljer
-              </Button>
-              <Button color="inherit" component={Link} to="/product/1/edit">
-                Ändra produkt
-              </Button>
               <Button color="inherit" component={Link} to="/product/new">
                 Lägg till produkt
               </Button>
